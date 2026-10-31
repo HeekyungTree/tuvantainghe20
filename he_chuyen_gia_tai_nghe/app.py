@@ -66,8 +66,8 @@ PRODUCTS = [
         "uncertain": {"water", "noise"},
     },
     {
-        "code": "SP6", "name": "realme Buds Air 2",
-        "brand": "realme", "type": "Bluetooth", "form": "Nhét tai",
+        "code": "SP6", "name": "Realme Buds Air 2",
+        "brand": "Realme", "type": "Bluetooth", "form": "Nhét tai",
         "purposes": {"Nghe nhạc", "Giải trí", "Đàm thoại", "Học tập / học online", "Chơi game"},
         "price_min": 450_000, "price_max": 500_000,
         "battery": 5, "battery_total": 25, "water": "IPX5",
@@ -582,7 +582,7 @@ if st.session_state.get("show_results", False):
                 with details_col:
                     c1, c2 = st.columns(2)
                     with c1:
-                        st.write(f"**Mã sản phẩm:** {p['code']}")
+                        st.write(f"**Thương hiệu sản phẩm:** {p['brand']}")
                         st.write(f"**Loại:** {p['type']} · **Kiểu dáng:** {p['form']}")
                         st.write(f"**Mục đích:** {', '.join(sorted(p['purposes']))}")
                         st.write(f"**Pin mỗi lần sạc:** {str(p['battery']) + ' giờ' if p['battery'] is not None else 'Không dùng pin'}")
