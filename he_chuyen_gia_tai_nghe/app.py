@@ -371,12 +371,11 @@ st.markdown("""
 st.markdown("""
 <div class="hero">
   <h1>🎧 Hệ chuyên gia tư vấn lựa chọn tai nghe</h1>
-  <p>Chọn loại tai nghe ưu tiên trước, sau đó lần lượt chọn mục đích, ngân sách, hãng và các tính năng cần thiết.</p>
 </div>
 """, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.header("🧭 Tiêu chí tư vấn")
+    st.header("🧭 Tiến hành tư vấn")
     st.caption("Mỗi lựa chọn thu hẹp các lựa chọn tiếp theo theo sản phẩm còn phù hợp. Các tiêu chí bổ sung mặc định không lọc.")
     primary = st.radio(
         "1. Loại tai nghe ưu tiên",
