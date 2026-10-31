@@ -395,12 +395,12 @@ st.markdown("""
 
 st.markdown("""
 <div class="hero">
-  <h1>🎧 Hệ chuyên gia tư vấn lựa chọn tai nghe</h1>
+  <h1>🎧 HỆ CHUYÊN GIA TƯ VẤN TAI NGHE</h1>
 </div>
 """, unsafe_allow_html=True)
 
-st.subheader("🧭 Tiêu chí tư vấn")
-st.caption("Chọn lần lượt theo thứ tự đã đánh số để tìm được sản phẩm phù hợp.")
+st.subheader("🧭 Bắt đầu tư vấn")
+st.info("Chọn lần lượt theo thứ tự đã đánh số để tìm được sản phẩm phù hợp.")
 
 left, right = st.columns(2)
 with left:
