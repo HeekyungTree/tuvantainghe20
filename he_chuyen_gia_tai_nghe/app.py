@@ -587,7 +587,7 @@ if st.session_state.get("show_results", False):
                         st.write(f"**Giá tiền:** Khoảng {fmt_price(p['price_min'])} - {fmt_price(p['price_max'])}")  
         st.link_button("Xem cơ sở tri thức (22 sản phẩm)", "?view=knowledge-base")
 else:
-    st.info("Chọn các tiêu chí bên trên rồi nhấn **Tìm tai nghe phù hợp** để xem kết quả. Để tăng khả năng có kết quả, có thể để chống nước, chống ồn và thiết bị ở mức “Không yêu cầu”.")
+    st.info("Chọn các tiêu chí bên trên rồi nhấn **Tìm tai nghe phù hợp** để xem kết quả.")
     st.markdown("### Danh sách các sản phẩm")
     c1, c2, c3 = st.columns(3)
     c1.metric("Tổng sản phẩm", "22")
