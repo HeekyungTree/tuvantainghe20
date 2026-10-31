@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 st.set_page_config(
-    page_title="Hệ chuyên gia tư vấn tai nghe",
+    page_title="HỆ CHUYÊN GIA TƯ VẤN TAI NGHE",
     page_icon="🎧",
     layout="wide",
 )
@@ -11,7 +11,7 @@ st.set_page_config(
 IMAGE_DIR = Path(__file__).parent / "images"
 
 # ============================================================
-# CƠ SỞ TRI THỨC: 12 sản phẩm theo tài liệu nhóm cung cấp
+# CƠ SỞ TRI THỨC: 12 sản phẩm theo tài liệu 
 # Các trường "None" nghĩa là thông tin chưa được xác nhận.
 # ============================================================
 PRODUCTS = [
@@ -286,6 +286,20 @@ def battery_matches(p, choice):
 def fmt_price(n):
     return f"{int(n):,}".replace(",", ".") + "đ"
 
+def knowledge_base_table():
+    import pandas as pd
+
+    return pd.DataFrame([
+        {
+            "Mã": p["code"], "Sản phẩm": p["name"], "Loại": p["type"],
+            "Kiểu dáng": p["form"],
+            "Giá": f"{fmt_price(p['price_min'])}–{fmt_price(p['price_max'])}",
+            "Pin": f"{p['battery']} giờ" if p["battery"] is not None else "Không dùng pin",
+            "Chống nước": p["water"], "Chống ồn": p["noise"],
+        }
+        for p in PRODUCTS
+    ])
+
 def price_matches(p, bounds):
     lo, hi = bounds
     # Giá sản phẩm giao với khoảng ngân sách được chọn.
@@ -358,14 +372,24 @@ def water_requirement_text(value):
         "ip54": "IP54",
     }[value]
 
+if st.query_params.get("view") == "knowledge-base":
+    st.title("Danh sách các sản phẩm")
+    st.caption(f"Danh sách đầy đủ {len(PRODUCTS)} sản phẩm.")
+    st.link_button("← Quay lại tư vấn", "?")
+    st.dataframe(knowledge_base_table(), use_container_width=True, hide_index=True)
+    st.stop()
+
 st.markdown("""
 <style>
 .block-container {padding-top: 1.8rem; padding-bottom: 2.5rem; max-width: 1200px;}
-.hero {padding: 1.35rem 1.5rem; border-radius: 18px; background: linear-gradient(120deg,#635bff,#49c7df); color: white; margin-bottom: 1rem;}
-.hero h1 {font-size: 2rem; margin: 0 0 .35rem 0;}
+.hero {padding: 2rem 1.5rem; border-radius: 18px; background: linear-gradient(120deg,#635bff,#49c7df); color: white; margin-bottom: 1rem; text-align: center;}
+.hero h1 {font-size: clamp(2.2rem, 4vw, 3.2rem); margin: 0; line-height: 1.2;}
 .hero p {margin: 0; opacity: .96;}
 .small {font-size: .88rem; opacity: .8;}
-.pill {display:inline-block; padding: .2rem .55rem; border-radius: 999px; background:#eef2ff; color:#3730a3; font-size:.8rem; margin-right:.25rem;}
+.pill {display:inline-block; padding: .2rem .55rem; border-radius: 999px; background:linear-gradient(120deg,#635bff,#49c7df); color:white; font-size:.8rem; margin-right:.25rem;}
+.st-key-search_button button {background:linear-gradient(120deg,#635bff,#49c7df); color:#fff; border:1px solid #635bff;}
+.st-key-search_button button:hover {background:linear-gradient(120deg,#554de0,#3aaac2); border-color:#554de0; color:#fff;}
+.st-key-search_button button:focus:not(:active) {color:#fff; border-color:#635bff;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -375,10 +399,12 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-with st.sidebar:
-    st.header("🧭 Tiêu chí tư vấn")
-    st.caption("Mỗi lựa chọn thu hẹp các lựa chọn tiếp theo theo sản phẩm còn phù hợp. Các tiêu chí bổ sung mặc định không lọc.")
-    primary = st.radio(
+st.subheader("🧭 Tiêu chí tư vấn")
+st.caption("Chọn lần lượt theo thứ tự đã đánh số để tìm được sản phẩm phù hợp.")
+
+left, right = st.columns(2)
+with left:
+    primary = st.selectbox(
         "1. Loại tai nghe ưu tiên",
         ["Có dây", "Chụp tai", "Bluetooth", "Không ưu tiên"],
         index=3,
@@ -387,14 +413,15 @@ with st.sidebar:
         args=(0,),
         help="Chọn loại để giới hạn danh sách tư vấn; chọn Không ưu tiên để giữ mọi loại."
     )
-    candidates = [
-        p for p in PRODUCTS
-        if primary == "Không ưu tiên"
-        or (primary == "Có dây" and p["type"] == "Có dây")
-        or (primary == "Bluetooth" and p["type"] == "Bluetooth")
-        or (primary == "Chụp tai" and p["form"] == "Chụp tai")
-    ]
+candidates = [
+    p for p in PRODUCTS
+    if primary == "Không ưu tiên"
+    or (primary == "Có dây" and p["type"] == "Có dây")
+    or (primary == "Bluetooth" and p["type"] == "Bluetooth")
+    or (primary == "Chụp tai" and p["form"] == "Chụp tai")
+]
 
+with right:
     purpose_options = [purpose for purpose in PURPOSES if any(purpose in p["purposes"] for p in candidates)]
     purposes_selected = st.multiselect(
         "2. Mục đích sử dụng",
@@ -403,12 +430,15 @@ with st.sidebar:
         on_change=reset_following_questions,
         args=(1,),
     )
-    if purposes_selected:
-        candidates = [
-            p for p in candidates
-            if set(purposes_selected).intersection(p["purposes"])
-        ]
 
+if purposes_selected:
+    candidates = [
+        p for p in candidates
+        if set(purposes_selected).intersection(p["purposes"])
+    ]
+
+left, right = st.columns(2)
+with left:
     budget_options = [
         label for label, bounds in BUDGETS.items()
         if label == "Không giới hạn" or any(price_matches(p, bounds) for p in candidates)
@@ -420,9 +450,10 @@ with st.sidebar:
         on_change=reset_following_questions,
         args=(2,),
     )
-    budget_bounds = BUDGETS[budget_label]
-    candidates = [p for p in candidates if price_matches(p, budget_bounds)]
+budget_bounds = BUDGETS[budget_label]
+candidates = [p for p in candidates if price_matches(p, budget_bounds)]
 
+with right:
     brand_options = ["Không yêu cầu"] + sorted({p["brand"] for p in candidates})
     brand_choice = st.selectbox(
         "4. Thương hiệu",
@@ -431,9 +462,11 @@ with st.sidebar:
         on_change=reset_following_questions,
         args=(3,),
     )
-    if brand_choice != "Không yêu cầu":
-        candidates = [p for p in candidates if p["brand"] == brand_choice]
+if brand_choice != "Không yêu cầu":
+    candidates = [p for p in candidates if p["brand"] == brand_choice]
 
+left, right = st.columns(2)
+with left:
     device_options = ["Không yêu cầu"] + [
         device for device in DEVICE_OPTIONS[1:]
         if any(device in p["device"] for p in candidates)
@@ -445,9 +478,10 @@ with st.sidebar:
         on_change=reset_following_questions,
         args=(4,),
     )
-    if device_choice != "Không yêu cầu":
-        candidates = [p for p in candidates if device_choice in p["device"]]
+if device_choice != "Không yêu cầu":
+    candidates = [p for p in candidates if device_choice in p["device"]]
 
+with right:
     battery_choices = [
         "Không yêu cầu",
         "Có pin từ 5 giờ trở lên",
@@ -467,8 +501,10 @@ with st.sidebar:
         args=(5,),
         help="Chỉ lọc theo pin khi chọn một yêu cầu cụ thể.",
     )
-    candidates = [p for p in candidates if battery_matches(p, battery_choice)]
+candidates = [p for p in candidates if battery_matches(p, battery_choice)]
 
+left, right = st.columns(2)
+with left:
     noise_options = [
         label for label, choice in NOISE_OPTIONS.items()
         if choice == "none" or any(
@@ -484,11 +520,12 @@ with st.sidebar:
         args=(6,),
     )
     noise_choice = NOISE_OPTIONS[noise_label]
-    candidates = [
-        p for p in candidates
-        if hard_requirements_match(p, "none", noise_choice, device_choice, battery_choice)
-    ]
+candidates = [
+    p for p in candidates
+    if hard_requirements_match(p, "none", noise_choice, device_choice, battery_choice)
+]
 
+with right:
     water_options = [
         label for label, choice in WATER_OPTIONS.items()
         if choice == "none" or any(
@@ -504,11 +541,14 @@ with st.sidebar:
         args=(7,),
     )
     water_choice = WATER_OPTIONS[water_label]
-    candidates = [
-        p for p in candidates
-        if hard_requirements_match(p, water_choice, noise_choice, device_choice, battery_choice)
-    ]
-    st.caption(f"Còn {len(candidates)} sản phẩm phù hợp với các lựa chọn hiện tại.")
+candidates = [
+    p for p in candidates
+    if hard_requirements_match(p, water_choice, noise_choice, device_choice, battery_choice)
+]
+st.caption(f"Còn {len(candidates)} sản phẩm phù hợp với các lựa chọn hiện tại.")
+
+if st.button("Tìm tai nghe phù hợp", use_container_width=True, key="search_button"):
+    st.session_state["show_results"] = True
 
 st.subheader("Cách hệ thống suy luận")
 st.markdown(
@@ -516,9 +556,6 @@ st.markdown(
     "thiết bị kết nối, pin, chống ồn và chống nước. Mỗi bước chỉ đưa ra lựa chọn còn có "
     "sản phẩm phù hợp từ các bước trước; để trống yêu cầu bổ sung nếu không cần lọc."
 )
-
-if st.button("Tìm tai nghe phù hợp", use_container_width=True):
-    st.session_state["show_results"] = True
 
 if st.session_state.get("show_results", False):
     ranked = []
@@ -554,22 +591,12 @@ if st.session_state.get("show_results", False):
                         st.write(f"**Chống nước:** {p['water']}")
                         st.write(f"**Chống ồn:** {p['noise']}")
                         st.write(f"**Kết nối:** {', '.join(sorted(p['device']))}")
-        with st.expander("Xem cơ sở tri thức (22 sản phẩm)"):
-            import pandas as pd
-            table = []
-            for p in PRODUCTS:
-                table.append({
-                    "Mã": p["code"], "Sản phẩm": p["name"], "Loại": p["type"],
-                    "Kiểu dáng": p["form"],
-                    "Giá": f"{fmt_price(p['price_min'])}–{fmt_price(p['price_max'])}",
-                    "Pin": f"{p['battery']} giờ" if p["battery"] is not None else "Không dùng pin",
-                    "Chống nước": p["water"], "Chống ồn": p["noise"],
-                })
-            st.dataframe(pd.DataFrame(table), use_container_width=True, hide_index=True)
+        st.link_button("Xem cơ sở tri thức (22 sản phẩm)", "?view=knowledge-base")
 else:
-    st.info("Chọn các tiêu chí ở thanh bên trái rồi nhấn **Tìm tai nghe phù hợp** để xem kết quả. Để tăng khả năng có kết quả, có thể để chống nước, chống ồn và thiết bị ở mức “Không yêu cầu”.")
-    st.markdown("### Nhóm sản phẩm trong cơ sở tri thức")
+    st.info("Chọn các tiêu chí bên trên rồi nhấn **Tìm tai nghe phù hợp** để xem kết quả. Để tăng khả năng có kết quả, có thể để chống nước, chống ồn và thiết bị ở mức “Không yêu cầu”.")
+    st.markdown("### Danh sách các sản phẩm")
     c1, c2, c3 = st.columns(3)
     c1.metric("Tổng sản phẩm", "22")
     c2.metric("Có dây", "13")
     c3.metric("Bluetooth", "9")
+    st.link_button("Xem danh sách sản phẩm", "?view=knowledge-base")
