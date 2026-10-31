@@ -550,13 +550,6 @@ st.caption(f"Còn {len(candidates)} sản phẩm phù hợp với các lựa ch�
 if st.button("Tìm tai nghe phù hợp", use_container_width=True, key="search_button"):
     st.session_state["show_results"] = True
 
-st.subheader("Cách hệ thống suy luận")
-st.markdown(
-    "Các câu hỏi được áp dụng lần lượt: loại tai nghe, mục đích, ngân sách, thương hiệu, "
-    "thiết bị kết nối, pin, chống ồn và chống nước. Mỗi bước chỉ đưa ra lựa chọn còn có "
-    "sản phẩm phù hợp từ các bước trước; để trống yêu cầu bổ sung nếu không cần lọc."
-)
-
 if st.session_state.get("show_results", False):
     ranked = []
     for p in candidates:
@@ -575,7 +568,7 @@ if st.session_state.get("show_results", False):
     else:
         st.markdown("#### Danh sách đề xuất")
         for rank, (score, p, reasons) in enumerate(ranked, start=1):
-            with st.expander(f"{rank}. {p['name']} — {fmt_price(p['price_min'])}–{fmt_price(p['price_max'])}"):
+            with st.expander(f"{rank}. {p['name']}"):
                 image_col, details_col = st.columns([1, 4])
                 with image_col:
                     st.image(str(IMAGE_DIR / f"{p['code']}.png"), use_container_width=True)
@@ -591,6 +584,7 @@ if st.session_state.get("show_results", False):
                         st.write(f"**Chống nước:** {p['water']}")
                         st.write(f"**Chống ồn:** {p['noise']}")
                         st.write(f"**Kết nối:** {', '.join(sorted(p['device']))}")
+                        st.write(f"**Giá tiền:** {', '.join({fmt_price(p['price_min'])}–{fmt_price(p['price_max'])})}")  
         st.link_button("Xem cơ sở tri thức (22 sản phẩm)", "?view=knowledge-base")
 else:
     st.info("Chọn các tiêu chí bên trên rồi nhấn **Tìm tai nghe phù hợp** để xem kết quả. Để tăng khả năng có kết quả, có thể để chống nước, chống ồn và thiết bị ở mức “Không yêu cầu”.")
