@@ -547,7 +547,7 @@ candidates = [
 ]
 st.caption(f"Còn {len(candidates)} sản phẩm phù hợp với các lựa chọn hiện tại.")
 
-if st.button("Tìm tai nghe phù hợp", use_container_width=True, key="search_button"):
+if st.button("TÌM TAI NGHE PHÙ HỢP", use_container_width=True, key="search_button"):
     st.session_state["show_results"] = True
 
 if st.session_state.get("show_results", False):
