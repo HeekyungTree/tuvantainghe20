@@ -268,6 +268,7 @@ QUESTION_KEYS = [
 ]
 
 def reset_following_questions(question_index):
+    st.session_state["show_results"] = False
     for key in QUESTION_KEYS[question_index + 1:]:
         st.session_state.pop(key, None)
 
@@ -375,7 +376,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.header("🧭 Tiến hành tư vấn")
+    st.header("🧭 Tiêu chí tư vấn")
     st.caption("Mỗi lựa chọn thu hẹp các lựa chọn tiếp theo theo sản phẩm còn phù hợp. Các tiêu chí bổ sung mặc định không lọc.")
     primary = st.radio(
         "1. Loại tai nghe ưu tiên",
@@ -508,7 +509,6 @@ with st.sidebar:
         if hard_requirements_match(p, water_choice, noise_choice, device_choice, battery_choice)
     ]
     st.caption(f"Còn {len(candidates)} sản phẩm phù hợp với các lựa chọn hiện tại.")
-    run = True
 
 st.subheader("Cách hệ thống suy luận")
 st.markdown(
@@ -517,7 +517,10 @@ st.markdown(
     "sản phẩm phù hợp từ các bước trước; để trống yêu cầu bổ sung nếu không cần lọc."
 )
 
-if run:
+if st.button("Tìm tai nghe phù hợp", use_container_width=True):
+    st.session_state["show_results"] = True
+
+if st.session_state.get("show_results", False):
     ranked = []
     for p in candidates:
         score, reasons = score_product(
@@ -564,7 +567,7 @@ if run:
                 })
             st.dataframe(pd.DataFrame(table), use_container_width=True, hide_index=True)
 else:
-    st.info("Chọn các tiêu chí ở thanh bên trái rồi nhấn **Tư vấn tai nghe**. Để tăng khả năng có kết quả, có thể để chống nước, chống ồn và thiết bị ở mức “Không yêu cầu”.")
+    st.info("Chọn các tiêu chí ở thanh bên trái rồi nhấn **Tìm tai nghe phù hợp** để xem kết quả. Để tăng khả năng có kết quả, có thể để chống nước, chống ồn và thiết bị ở mức “Không yêu cầu”.")
     st.markdown("### Nhóm sản phẩm trong cơ sở tri thức")
     c1, c2, c3 = st.columns(3)
     c1.metric("Tổng sản phẩm", "22")
