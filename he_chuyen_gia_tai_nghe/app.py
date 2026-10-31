@@ -536,7 +536,7 @@ if run:
     else:
         st.markdown("#### Danh sách đề xuất")
         for rank, (score, p, reasons) in enumerate(ranked, start=1):
-            with st.expander(f"{rank}. {p['name']} — {fmt_price(p['price_min'])}–{fmt_price(p['price_max'])} · Điểm {score:g}"):
+            with st.expander(f"{rank}. {p['name']} — {fmt_price(p['price_min'])}–{fmt_price(p['price_max'])}"):
                 image_col, details_col = st.columns([1, 4])
                 with image_col:
                     st.image(str(IMAGE_DIR / f"{p['code']}.png"), use_container_width=True)
