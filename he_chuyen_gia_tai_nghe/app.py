@@ -396,6 +396,7 @@ st.markdown("""
 st.markdown("""
 <div class="hero">
   <h1>🎧 HỆ CHUYÊN GIA TƯ VẤN TAI NGHE</h1>
+  <h2> Nhóm 20 - Nhập môn trí tuệ nhân tạo</h2>
 </div>
 """, unsafe_allow_html=True)
 
