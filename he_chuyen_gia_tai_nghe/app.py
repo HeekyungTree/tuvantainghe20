@@ -381,14 +381,43 @@ if st.query_params.get("view") == "knowledge-base":
 
 st.markdown("""
 <style>
+/* Background tổng thể: Dùng màu xanh-tím nhạt và dịu nhẹ lan tỏa */
+.stApp {
+    background: linear-gradient(135deg, rgba(124, 110, 255, 0.08) 0%, rgba(100, 150, 255, 0.12) 50%, rgba(73, 199, 223, 0.08) 100%) !important;
+}
+
 .block-container {padding-top: 1.8rem; padding-bottom: 2.5rem; max-width: 1200px;}
-.hero {padding: 2rem 1.5rem; border-radius: 18px; background: linear-gradient(120deg,#635bff,#49c7df); color: white; margin-bottom: 1rem; text-align: center;}
-.hero h1 {font-size: clamp(2.2rem, 4vw, 3.2rem); margin: 0; line-height: 1.2;}
-.hero p {margin: 0; opacity: .96;}
+
+/* Khung Hero (Banner): Giữ nguyên màu sắc đậm và rực rỡ như mẫu bạn thích */
+.hero {
+    padding: 2rem 1.5rem; 
+    border-radius: 18px; 
+    background: linear-gradient(120deg, #635bff, #49c7df); 
+    color: white; 
+    margin-bottom: 1rem; 
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(99, 91, 255, 0.2);
+}
+.hero h1 {font-size: clamp(2.2rem, 4vw, 3.2rem); margin: 0; line-height: 1.2; color: #ffffff;}
+.hero p, .hero h4 {margin: 0; opacity: .96; color: #ffffff;}
 .small {font-size: .88rem; opacity: .8;}
+
 .pill {display:inline-block; padding: .2rem .55rem; border-radius: 999px; background:linear-gradient(120deg,#635bff,#49c7df); color:white; font-size:.8rem; margin-right:.25rem;}
-.st-key-search_button button {background:linear-gradient(120deg,#635bff,#49c7df); color:#fff; border:1px solid #635bff;}
-.st-key-search_button button:hover {background:linear-gradient(120deg,#554de0,#3aaac2); border-color:#554de0; color:#fff;}
+
+/* Nút bấm đồng bộ với màu của khung banner */
+.st-key-search_button button {
+    background: linear-gradient(120deg, #635bff, #49c7df); 
+    color: #fff; 
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.st-key-search_button button:hover {
+    background: linear-gradient(120deg, #554de0, #3aaac2); 
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(99, 91, 255, 0.3);
+}
 .st-key-search_button button:focus:not(:active) {color:#fff; border-color:#635bff;}
 </style>
 """, unsafe_allow_html=True)
