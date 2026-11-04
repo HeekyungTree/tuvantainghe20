@@ -302,7 +302,7 @@ def knowledge_base_table():
 
 def price_matches(p, bounds):
     lo, hi = bounds
-    # Giá sản phẩm giao với khoảng ngân sách được chọn.
+    # Giá sản phẩm 
     return p["price_max"] >= lo and p["price_min"] <= hi
 
 def hard_requirements_match(p, water_choice, noise_choice, device_choice, battery_choice):
@@ -388,7 +388,7 @@ st.markdown("""
 
 .block-container {padding-top: 1.8rem; padding-bottom: 2.5rem; max-width: 1200px;}
 
-/* Khung Hero (Banner): Giữ nguyên màu sắc đậm và rực rỡ như mẫu bạn thích */
+/* Khung Hero (Banner) */
 .hero {
     padding: 2rem 1.5rem; 
     border-radius: 18px; 
@@ -404,7 +404,7 @@ st.markdown("""
 
 .pill {display:inline-block; padding: .2rem .55rem; border-radius: 999px; background:linear-gradient(120deg,#635bff,#49c7df); color:white; font-size:.8rem; margin-right:.25rem;}
 
-/* Nút bấm đồng bộ với màu của khung banner */
+/* Nút bấm  */
 .st-key-search_button button {
     background: linear-gradient(120deg, #635bff, #49c7df); 
     color: #fff; 
